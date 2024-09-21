@@ -29,7 +29,7 @@ export default function ConnectWalletButton() {
   async function handleConnect() {
     try {
       const web3modal = new Web3Modal({
-        cacheProvider: true, // changed to true
+        cacheProvider: true,
         providerOptions,
       });
 
@@ -50,6 +50,11 @@ export default function ConnectWalletButton() {
   function handleDisconnect() {
     setWalletAddress("");
     localStorage.removeItem("isWalletConnected");
+    const web3modal = new Web3Modal({
+      cacheProvider: true,
+      providerOptions,
+    });
+    web3modal.clearCachedProvider();
   }
 
   return walletAddress ? (
