@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Eye, Zap } from "lucide-react";
+import Image from "next/image";
 
 export default function MantaNetworkSection() {
   return (
@@ -18,10 +19,12 @@ export default function MantaNetworkSection() {
       </h2>
       <div className="flex flex-col md:flex-row items-center justify-center gap-8">
         <div className="md:w-1/2">
-          <img
-            src="/placeholder.svg?height=300&width=300"
+          <Image
+            src="/placeholder.svg?"
             alt="Manta Network"
             className="mx-auto"
+            width={300}
+            height={300}
           />
         </div>
         <div className="md:w-1/2 space-y-4">

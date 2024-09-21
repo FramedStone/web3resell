@@ -11,7 +11,7 @@ const providerOptions = {
 };
 
 export default function ConnectWalletButton() {
-  const [wallet_address, set_walletAddress] = useState<any>(null);
+  const [wallet_address, set_walletAddress] = useState("");
 
   async function handleConnect() {
     try {
@@ -28,7 +28,7 @@ export default function ConnectWalletButton() {
       set_walletAddress(wallet_address);
     } catch (error) {
       console.error(error);
-      set_walletAddress(null);
+      set_walletAddress("");
     }
   }
 
