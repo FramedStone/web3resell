@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ConnectWalletButton from "./ConnectWalletButton";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Header() {
@@ -19,6 +19,10 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <motion.header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -32,13 +36,27 @@ export default function Header() {
         <div className="flex justify-between items-center">
           <div className="text-2xl font-bold">web3resell</div>
 
-          <Button
-            variant="ghost"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          <motion.button
+            className="lg:hidden text-white focus:outline-none"
+            onClick={toggleMobileMenu}
+            whileTap={{ scale: 0.95 }}
           >
-            <Menu className="h-6 w-6" />
-          </Button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={mobileMenuOpen ? "open" : "closed"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
 
           <nav className="hidden lg:flex space-x-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <a href="#" className="hover:text-purple-300 transition-colors">
@@ -60,25 +78,62 @@ export default function Header() {
           </div>
         </div>
 
-        {mobileMenuOpen && (
-          <nav className="lg:hidden mt-4 flex flex-col space-y-2">
-            <a href="#" className="hover:text-purple-300 transition-colors">
-              Home
-            </a>
-            <a href="#" className="hover:text-purple-300 transition-colors">
-              Marketplace
-            </a>
-            <a href="#" className="hover:text-purple-300 transition-colors">
-              About
-            </a>
-            <a href="#" className="hover:text-purple-300 transition-colors">
-              Contact
-            </a>
-            <div className="mt-2">
-              <ConnectWalletButton />
-            </div>
-          </nav>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.nav
+              className="lg:hidden mt-4 flex flex-col space-y-2"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <motion.a
+                href="#"
+                className="hover:text-purple-300 transition-colors"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                Home
+              </motion.a>
+              <motion.a
+                href="#"
+                className="hover:text-purple-300 transition-colors"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                Marketplace
+              </motion.a>
+              <motion.a
+                href="#"
+                className="hover:text-purple-300 transition-colors"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                About
+              </motion.a>
+              <motion.a
+                href="#"
+                className="hover:text-purple-300 transition-colors"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Contact
+              </motion.a>
+              <motion.div
+                className="mt-2"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <ConnectWalletButton />
+              </motion.div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </motion.header>
   );
