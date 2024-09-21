@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 
@@ -11,12 +11,25 @@ const providerOptions = {
 };
 
 export default function ConnectWalletButton() {
-  const [wallet_address, set_walletAddress] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+
+  useEffect(() => {
+    const connectWalletOnPageLoad = async () => {
+      if (localStorage?.getItem("isWalletConnected") === "true") {
+        try {
+          await handleConnect();
+        } catch (ex) {
+          console.log(ex);
+        }
+      }
+    };
+    connectWalletOnPageLoad();
+  }, []);
 
   async function handleConnect() {
     try {
       const web3modal = new Web3Modal({
-        cacheProvider: false,
+        cacheProvider: true, // changed to true
         providerOptions,
       });
 
@@ -25,19 +38,26 @@ export default function ConnectWalletButton() {
       const web3modal_signer = await web3modal_provider.getSigner();
 
       const wallet_address = await web3modal_signer.getAddress();
-      set_walletAddress(wallet_address);
+      setWalletAddress(wallet_address);
+      localStorage.setItem("isWalletConnected", "true");
     } catch (error) {
       console.error(error);
-      set_walletAddress("");
+      setWalletAddress("");
+      localStorage.removeItem("isWalletConnected");
     }
   }
 
-  return wallet_address ? (
+  function handleDisconnect() {
+    setWalletAddress("");
+    localStorage.removeItem("isWalletConnected");
+  }
+
+  return walletAddress ? (
     <Button
       className="bg-purple-600 hover:bg-purple-700"
-      onClick={handleConnect}
+      onClick={handleDisconnect}
     >
-      <Wallet className="mr-2 h-4 w-4" /> {wallet_address}
+      <Wallet className="mr-2 h-4 w-4" /> {walletAddress}
     </Button>
   ) : (
     <Button
