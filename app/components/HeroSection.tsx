@@ -27,8 +27,8 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Buy and sell products securely on web3resell, powered by Manta
-        Network&rsquo;s layer 2 blockchain
+        Buy and sell products securely on web3resell, powered by layer 2
+        blockchain Manta Network
       </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
