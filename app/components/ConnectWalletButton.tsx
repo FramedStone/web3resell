@@ -57,19 +57,17 @@ export default function ConnectWalletButton() {
     web3modal.clearCachedProvider();
   }
 
-  return walletAddress ? (
+  return (
     <Button
-      className="bg-purple-600 hover:bg-purple-700"
-      onClick={handleDisconnect}
+      className={`w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out ${
+        walletAddress ? "text-xs sm:text-sm" : "text-sm sm:text-base"
+      }`}
+      onClick={walletAddress ? handleDisconnect : handleConnect}
     >
-      <Wallet className="mr-2 h-4 w-4" /> {walletAddress}
-    </Button>
-  ) : (
-    <Button
-      className="bg-purple-600 hover:bg-purple-700"
-      onClick={handleConnect}
-    >
-      <Wallet className="mr-2 h-4 w-4" /> Connect Wallet
+      <Wallet className="mr-2 h-4 w-4" />
+      <span className="truncate max-w-[120px] sm:max-w-[200px]">
+        {walletAddress ? walletAddress : "Connect Wallet"}
+      </span>
     </Button>
   );
 }
