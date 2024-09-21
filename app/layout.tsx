@@ -1,12 +1,8 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import ScrollToTop from "./components/ScrollToTop";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
-  title: "web3resell",
-  description: "Decentralized marketplace powered by Manta Network",
-};
 
 export default function RootLayout({
   children,
@@ -15,7 +11,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ScrollToTop />
+        {children}
+      </body>
     </html>
   );
 }
