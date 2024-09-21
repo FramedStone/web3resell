@@ -29,8 +29,8 @@ export default function MantaNetworkSection() {
             Layer 2 Blockchain Solution
           </h3>
           <p className="text-gray-300">
-            web3resell leverages Manta Network's cutting-edge technology to
-            provide:
+            web3resell leverages Manta Network&rsquo;s cutting-edge technology
+            to provide:
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-300">
             <li>High-performance layer 2 blockchain architecture</li>
