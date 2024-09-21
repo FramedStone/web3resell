@@ -83,7 +83,7 @@ export default function Header() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -97,50 +97,61 @@ export default function Header() {
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="container mx-auto px-4 py-6 flex flex-col space-y-4 items-center">
-                <motion.a
-                  href="#"
-                  className="text-xl hover:text-purple-300 transition-colors"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  Home
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="text-xl hover:text-purple-300 transition-colors"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  Marketplace
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="text-xl hover:text-purple-300 transition-colors"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  About
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="text-xl hover:text-purple-300 transition-colors"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  Contact
-                </motion.a>
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <ConnectWalletButton />
-                </motion.div>
+              <div className="container mx-auto px-4 py-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div className="text-2xl font-bold">web3resell</div>
+                  <button
+                    className="text-white focus:outline-none"
+                    onClick={toggleMobileMenu}
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+                <div className="flex flex-col space-y-4 items-center">
+                  <motion.a
+                    href="#"
+                    className="text-xl hover:text-purple-300 transition-colors"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    Home
+                  </motion.a>
+                  <motion.a
+                    href="#"
+                    className="text-xl hover:text-purple-300 transition-colors"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    Marketplace
+                  </motion.a>
+                  <motion.a
+                    href="#"
+                    className="text-xl hover:text-purple-300 transition-colors"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    About
+                  </motion.a>
+                  <motion.a
+                    href="#"
+                    className="text-xl hover:text-purple-300 transition-colors"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    Contact
+                  </motion.a>
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <ConnectWalletButton />
+                  </motion.div>
+                </div>
               </div>
             </motion.nav>
           </motion.div>
