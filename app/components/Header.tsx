@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ConnectWalletButton from "./ConnectWalletButton";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,23 +28,49 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
         <div className="text-2xl font-bold">web3resell</div>
-        <nav className="absolute left-1/2 transform -translate-x-1/2 space-x-4">
-          <a href="#" className="hover:text-purple-300 transition-colors">
+
+        <Button
+          variant="ghost"
+          className="lg:hidden"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <Menu className="h-6 w-6" />
+        </Button>
+
+        <nav
+          className={`${
+            mobileMenuOpen ? "block" : "hidden"
+          } w-full lg:w-auto lg:flex lg:items-center lg:space-x-4 mt-4 lg:mt-0`}
+        >
+          <a
+            href="#"
+            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
+          >
             Home
           </a>
-          <a href="#" className="hover:text-purple-300 transition-colors">
+          <a
+            href="#"
+            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
+          >
             Marketplace
           </a>
-          <a href="#" className="hover:text-purple-300 transition-colors">
+          <a
+            href="#"
+            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
+          >
             About
           </a>
-          <a href="#" className="hover:text-purple-300 transition-colors">
+          <a
+            href="#"
+            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
+          >
             Contact
           </a>
         </nav>
-        <div className="flex-shrink-0">
+
+        <div className="w-full lg:w-auto mt-4 lg:mt-0">
           <ConnectWalletButton />
         </div>
       </div>
