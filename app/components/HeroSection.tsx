@@ -19,7 +19,7 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        The Future of Decentralized Commerce is Here
+        The Future of Decentralized E-Commerce is Here
       </motion.h1>
       <motion.p
         className="text-lg lg:text-xl mb-8 max-w-2xl"
