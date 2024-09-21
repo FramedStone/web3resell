@@ -10,11 +10,11 @@ export default function HeroSection() {
 
   return (
     <motion.section
-      className="h-screen flex flex-col justify-center items-center text-center px-4"
+      className="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-16"
       style={{ opacity }}
     >
       <motion.h1
-        className="text-5xl font-bold mb-6"
+        className="text-4xl lg:text-5xl font-bold mb-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -22,13 +22,13 @@ export default function HeroSection() {
         The Future of Decentralized Commerce is Here
       </motion.h1>
       <motion.p
-        className="text-xl mb-8 max-w-2xl"
+        className="text-lg lg:text-xl mb-8 max-w-2xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Buy and sell products securely on web3resell, powered by Manta
-        Network&rsquo;s layer 2 blockchain
+        Buy and sell products securely on web3resell, powered by Manta Network's
+        layer 2 blockchain
       </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 20 }}

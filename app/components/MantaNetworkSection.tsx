@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Eye, Zap } from "lucide-react";
-import Image from "next/image";
 
 export default function MantaNetworkSection() {
   return (
@@ -14,26 +13,24 @@ export default function MantaNetworkSection() {
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
     >
-      <h2 className="text-3xl font-bold mb-8 text-center">
+      <h2 className="text-2xl lg:text-3xl font-bold mb-8 text-center">
         Powered by Manta Network
       </h2>
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-        <div className="md:w-1/2">
-          <Image
-            src="/placeholder.svg?"
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+        <div className="lg:w-1/2">
+          <img
+            src="/placeholder.svg?height=300&width=300"
             alt="Manta Network"
             className="mx-auto"
-            width={300}
-            height={300}
           />
         </div>
-        <div className="md:w-1/2 space-y-4">
-          <h3 className="text-2xl font-semibold">
+        <div className="lg:w-1/2 space-y-4">
+          <h3 className="text-xl lg:text-2xl font-semibold">
             Layer 2 Blockchain Solution
           </h3>
           <p className="text-gray-300">
-            web3resell leverages Manta Network&rsquo;s cutting-edge technology
-            to provide:
+            web3resell leverages Manta Network's cutting-edge technology to
+            provide:
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-300">
             <li>High-performance layer 2 blockchain architecture</li>

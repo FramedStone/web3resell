@@ -28,51 +28,57 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
-        <div className="text-2xl font-bold">web3resell</div>
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <div className="text-2xl font-bold">web3resell</div>
 
-        <Button
-          variant="ghost"
-          className="lg:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <Menu className="h-6 w-6" />
-        </Button>
+          <Button
+            variant="ghost"
+            className="lg:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
 
-        <nav
-          className={`${
-            mobileMenuOpen ? "block" : "hidden"
-          } w-full lg:w-auto lg:flex lg:items-center lg:space-x-4 mt-4 lg:mt-0`}
-        >
-          <a
-            href="#"
-            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
-          >
-            Home
-          </a>
-          <a
-            href="#"
-            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
-          >
-            Marketplace
-          </a>
-          <a
-            href="#"
-            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
-          >
-            About
-          </a>
-          <a
-            href="#"
-            className="block py-2 lg:inline-block lg:py-0 hover:text-purple-300 transition-colors"
-          >
-            Contact
-          </a>
-        </nav>
+          <nav className="hidden lg:flex space-x-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Home
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Marketplace
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              About
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Contact
+            </a>
+          </nav>
 
-        <div className="w-full lg:w-auto mt-4 lg:mt-0">
-          <ConnectWalletButton />
+          <div className="hidden lg:block">
+            <ConnectWalletButton />
+          </div>
         </div>
+
+        {mobileMenuOpen && (
+          <nav className="lg:hidden mt-4 flex flex-col space-y-2">
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Home
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Marketplace
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              About
+            </a>
+            <a href="#" className="hover:text-purple-300 transition-colors">
+              Contact
+            </a>
+            <div className="mt-2">
+              <ConnectWalletButton />
+            </div>
+          </nav>
+        )}
       </div>
     </motion.header>
   );
