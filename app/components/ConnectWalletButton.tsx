@@ -1,67 +1,159 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Wallet, ChevronDown, Coins, Package, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConnectWalletButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const storedWalletAddress = localStorage.getItem("walletAddress");
+    if (storedWalletAddress) {
+      setWalletAddress(storedWalletAddress);
+      setIsConnected(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const connectWallet = () => {
-    // Simulating wallet connection
-    setIsConnected(true);
+    if (!isConnected && !isAnimating) {
+      setIsAnimating(true);
+      // Simulating wallet connection
+      setTimeout(() => {
+        const newWalletAddress = "0x1234...5678"; // Replace with actual wallet connection logic
+        setWalletAddress(newWalletAddress);
+        setIsConnected(true);
+        setIsAnimating(false);
+        localStorage.setItem("walletAddress", newWalletAddress);
+      }, 1000);
+    }
   };
 
   const disconnectWallet = () => {
     // Simulating wallet disconnection
     setIsConnected(false);
+    setWalletAddress("");
     setIsOpen(false);
+    localStorage.removeItem("walletAddress");
+  };
+
+  const buttonVariants = {
+    idle: { scale: 1 },
+    connecting: {
+      scale: [1, 1.1, 1],
+      transition: { duration: 0.5, repeat: Infinity },
+    },
+    connected: { scale: 1 },
+  };
+
+  const iconVariants = {
+    idle: { rotate: 0 },
+    connecting: {
+      rotate: 360,
+      transition: { duration: 1, repeat: Infinity, ease: "linear" },
+    },
+    connected: { rotate: 0 },
+  };
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      transition: {
+        duration: 0.2,
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -20 },
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left" ref={dropdownRef}>
       <div>
-        <button
+        <motion.button
           type="button"
           className="inline-flex justify-center items-center w-full rounded-md border border-transparent px-4 py-2 bg-purple-600 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
           id="connect-wallet-button"
           aria-haspopup="true"
           aria-expanded={isOpen}
           onClick={isConnected ? toggleDropdown : connectWallet}
+          variants={buttonVariants}
+          animate={
+            isAnimating ? "connecting" : isConnected ? "connected" : "idle"
+          }
         >
+          <motion.div
+            variants={iconVariants}
+            animate={isAnimating ? "connecting" : "idle"}
+          >
+            <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
+          </motion.div>
           {isConnected ? (
             <>
-              <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
-              <span className="hidden sm:inline">0x1234...5678</span>
+              <span className="hidden sm:inline">{walletAddress}</span>
               <span className="sm:hidden">Wallet</span>
               <ChevronDown className="ml-2 h-5 w-5" aria-hidden="true" />
             </>
           ) : (
-            <>
-              <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
-              <span>Connect Wallet</span>
-            </>
+            <span>{isAnimating ? "Connecting..." : "Connect Wallet"}</span>
           )}
-        </button>
+        </motion.button>
       </div>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.1 }}
+            variants={dropdownVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="connect-wallet-button"
           >
             <div className="py-1" role="none">
-              <a
+              <motion.a
+                variants={itemVariants}
                 href="#"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
@@ -71,8 +163,9 @@ export default function ConnectWalletButton() {
                   aria-hidden="true"
                 />
                 CT Tokens
-              </a>
-              <a
+              </motion.a>
+              <motion.a
+                variants={itemVariants}
                 href="#"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
@@ -82,10 +175,11 @@ export default function ConnectWalletButton() {
                   aria-hidden="true"
                 />
                 Products (Seller)
-              </a>
+              </motion.a>
             </div>
             <div className="py-1" role="none">
-              <button
+              <motion.button
+                variants={itemVariants}
                 className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
                 onClick={disconnectWallet}
@@ -95,7 +189,7 @@ export default function ConnectWalletButton() {
                   aria-hidden="true"
                 />
                 Disconnect Wallet
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}

@@ -40,18 +40,14 @@ export default function Header() {
       >
         <div className="container mx-auto px-4 py-2 sm:py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
               <Link
                 href="/"
                 className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap"
               >
                 web3resell
                 {isMarketplacePage && (
-                  <span
-                    className={`ml-1 sm:ml-2 text-sm sm:text-base text-purple-300 ${
-                      mobileMenuOpen ? "hidden sm:inline" : ""
-                    }`}
-                  >
+                  <span className="ml-1 sm:ml-2 text-sm sm:text-base text-purple-300">
                     Marketplace
                   </span>
                 )}
@@ -85,7 +81,7 @@ export default function Header() {
               </Link>
             </nav>
 
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
               {isMarketplacePage && (
                 <div className="hidden sm:block">
                   <ListProductPopup />
@@ -143,7 +139,7 @@ export default function Header() {
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              <nav className="flex flex-col space-y-6 items-center">
+              <nav className="flex flex-col space-y-6 items-center mb-6">
                 <Link
                   href="/"
                   className="text-lg sm:text-xl text-white hover:text-purple-300 transition-colors"
@@ -168,9 +164,9 @@ export default function Header() {
                 >
                   Contact
                 </Link>
-                {isMarketplacePage && <ListProductPopup />}
-                <ConnectWalletButton />
               </nav>
+              {isMarketplacePage && <ListProductPopup />}
+              <ConnectWalletButton />
             </div>
           </motion.div>
         )}
