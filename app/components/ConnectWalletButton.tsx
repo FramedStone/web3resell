@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Wallet, ChevronDown, Plus, DollarSign } from "lucide-react";
+import { Wallet, ChevronDown, DollarSign } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
@@ -79,12 +79,6 @@ export default function ConnectWalletButton() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
-  function handleListProduct() {
-    // Implement logic to list a product
-    console.log("Listing a product...");
-    setIsDropdownOpen(false);
-  }
-
   function handleTopUpTokens() {
     // Implement logic to top up tokens
     console.log("Topping up tokens...");
@@ -115,13 +109,6 @@ export default function ConnectWalletButton() {
       </Button>
       {isDropdownOpen && walletAddress && (
         <div className="absolute right-0 mt-2 w-48 bg-purple-800 rounded-md overflow-hidden shadow-xl z-10">
-          <button
-            onClick={handleListProduct}
-            className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"
-          >
-            <Plus className="inline-block mr-2" size={16} />
-            List a Product
-          </button>
           <button
             onClick={handleTopUpTokens}
             className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"

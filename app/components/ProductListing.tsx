@@ -7,53 +7,67 @@ import Image from "next/image";
 interface Product {
   id: number;
   name: string;
-  price: number;
+  priceRM: number | null;
+  priceMANTA: number | null;
   image: string;
   seller: string;
+  isVerified: boolean;
 }
 
 const dummyProducts: Product[] = [
   {
     id: 1,
     name: "Vintage Watch",
-    price: 150,
+    priceRM: 150,
+    priceMANTA: 1500,
     image: "/placeholder.svg",
     seller: "0x1234...5678",
+    isVerified: true,
   },
   {
     id: 2,
     name: "Antique Vase",
-    price: 300,
+    priceRM: 300,
+    priceMANTA: null,
     image: "/placeholder.svg",
     seller: "0x8765...4321",
+    isVerified: false,
   },
   {
     id: 3,
     name: "Rare Coin",
-    price: 500,
+    priceRM: null,
+    priceMANTA: 5000,
     image: "/placeholder.svg",
     seller: "0x2468...1357",
+    isVerified: true,
   },
   {
     id: 4,
     name: "Art Print",
-    price: 75,
+    priceRM: 75,
+    priceMANTA: 750,
     image: "/placeholder.svg",
     seller: "0x1357...2468",
+    isVerified: false,
   },
   {
     id: 5,
     name: "Collectible Figurine",
-    price: 200,
+    priceRM: 200,
+    priceMANTA: 2000,
     image: "/placeholder.svg",
     seller: "0x3691...2580",
+    isVerified: true,
   },
   {
     id: 6,
     name: "Vintage Camera",
-    price: 250,
+    priceRM: 250,
+    priceMANTA: 2500,
     image: "/placeholder.svg",
     seller: "0x1470...2580",
+    isVerified: false,
   },
 ];
 
@@ -81,10 +95,22 @@ export default function ProductListing() {
             <h2 className="text-xl font-semibold mb-2 text-white">
               {product.name}
             </h2>
-            <p className="text-purple-300 mb-2">Price: {product.price} MANTA</p>
+            {product.priceRM !== null && (
+              <p className="text-purple-300 mb-1">
+                Price: RM {product.priceRM.toFixed(2)}
+              </p>
+            )}
+            {product.priceMANTA !== null && (
+              <p className="text-purple-300 mb-2">
+                Price: {product.priceMANTA.toFixed(2)} MANTA
+              </p>
+            )}
             <p className="text-purple-400 text-sm mb-4">
               Seller: {product.seller}
             </p>
+            {product.isVerified && (
+              <p className="text-green-400 text-sm mb-4">Verified Product</p>
+            )}
             <button className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
               Buy Now
             </button>

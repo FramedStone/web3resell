@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import ConnectWalletButton from "./ConnectWalletButton";
+import ListProductPopup from "./ListProductPopup";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,6 +26,8 @@ export default function Header() {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const isMarketplacePage = pathname === "/marketplace";
+
   return (
     <>
       <motion.header
@@ -37,12 +40,15 @@ export default function Header() {
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold text-white">
-              web3resell
-              {pathname === "/marketplace" && (
-                <span className="ml-2 text-purple-300">Marketplace</span>
-              )}
-            </Link>
+            <div className="flex items-center">
+              <Link href="/" className="text-2xl font-bold text-white mr-4">
+                web3resell
+                {isMarketplacePage && (
+                  <span className="ml-2 text-purple-300">Marketplace</span>
+                )}
+              </Link>
+              {isMarketplacePage && <ListProductPopup />}
+            </div>
 
             <motion.button
               className="lg:hidden text-white focus:outline-none"
@@ -145,6 +151,7 @@ export default function Header() {
                 >
                   Contact
                 </Link>
+                {isMarketplacePage && <ListProductPopup />}
                 <ConnectWalletButton />
               </nav>
             </div>
