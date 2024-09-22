@@ -129,7 +129,18 @@ export default function Header() {
             exit={{ opacity: 0 }}
           >
             <div className="container mx-auto px-4 py-4">
-              <div className="flex justify-end items-center mb-8">
+              <div className="flex justify-between items-center mb-8">
+                <Link
+                  href="/"
+                  className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap"
+                >
+                  web3resell
+                  {isMarketplacePage && (
+                    <span className="ml-1 sm:ml-2 text-sm sm:text-base text-purple-300">
+                      Marketplace
+                    </span>
+                  )}
+                </Link>
                 <button
                   className="text-white focus:outline-none"
                   onClick={toggleMobileMenu}
