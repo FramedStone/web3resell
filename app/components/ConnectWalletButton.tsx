@@ -10,6 +10,12 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+
+const providerOptions = {
+  // Modify with custom SDK (coinbase, bitget...) if needed
+};
 
 export default function ConnectWalletButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,10 +26,10 @@ export default function ConnectWalletButton() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const storedWalletAddress = localStorage.getItem("walletAddress");
-    if (storedWalletAddress) {
-      setWalletAddress(storedWalletAddress);
-      setIsConnected(true);
+    const isWalletConnected =
+      localStorage.getItem("isWalletConnected") === "true";
+    if (isWalletConnected) {
+      handleConnect();
     }
   }, []);
 
@@ -45,31 +51,54 @@ export default function ConnectWalletButton() {
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const connectWallet = () => {
+  const handleConnect = async () => {
     if (!isConnected && !isAnimating) {
       setIsAnimating(true);
       setError("");
-      // Simulating wallet connection
-      setTimeout(() => {
-        const newWalletAddress = ""; // Simulating an empty wallet address for error case
-        if (newWalletAddress === "") {
-          setError("Failed to connect wallet. Please try again.");
-          setIsAnimating(false);
-        } else {
-          setWalletAddress(newWalletAddress);
-          setIsConnected(true);
-          localStorage.setItem("walletAddress", newWalletAddress);
+      try {
+        // Simulate 1-second delay for connecting animation
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const web3modal = new Web3Modal({
+          cacheProvider: true,
+          providerOptions,
+        });
+
+        const web3modal_instance = await web3modal.connect();
+        const web3modal_provider = new ethers.BrowserProvider(
+          web3modal_instance
+        );
+        const web3modal_signer = await web3modal_provider.getSigner();
+
+        const wallet_address = await web3modal_signer.getAddress();
+
+        if (wallet_address === "") {
+          throw new Error("Failed to retrieve wallet address");
         }
+
+        setWalletAddress(wallet_address);
+        setIsConnected(true);
+        localStorage.setItem("isWalletConnected", "true");
+      } catch (error) {
+        console.error(error);
+        setError("Failed to connect wallet. Please try again.");
+        setWalletAddress("");
+        localStorage.removeItem("isWalletConnected");
+      } finally {
         setIsAnimating(false);
-      }, 1000);
+      }
     }
   };
 
-  const disconnectWallet = () => {
+  const disconnectWallet = async () => {
+    setIsAnimating(true);
+    // Simulate 1-second delay for disconnecting animation
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsConnected(false);
     setWalletAddress("");
     setIsOpen(false);
-    localStorage.removeItem("walletAddress");
+    localStorage.removeItem("isWalletConnected");
+    setIsAnimating(false);
   };
 
   const buttonVariants = {
@@ -79,6 +108,7 @@ export default function ConnectWalletButton() {
       transition: { duration: 0.5, repeat: Infinity },
     },
     connected: { scale: 1 },
+    popOut: { scale: [1, 1.2, 1], transition: { duration: 0.3 } },
   };
 
   const iconVariants = {
@@ -128,27 +158,51 @@ export default function ConnectWalletButton() {
           id="connect-wallet-button"
           aria-haspopup="true"
           aria-expanded={isOpen}
-          onClick={isConnected ? toggleDropdown : connectWallet}
+          onClick={isConnected ? toggleDropdown : handleConnect}
           variants={buttonVariants}
           animate={
             isAnimating ? "connecting" : isConnected ? "connected" : "idle"
           }
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <motion.div
             variants={iconVariants}
             animate={isAnimating ? "connecting" : "idle"}
+            className="mr-2"
           >
-            <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
+            <Wallet className="h-5 w-5" aria-hidden="true" />
           </motion.div>
-          {isConnected ? (
-            <>
-              <span className="hidden sm:inline">{walletAddress}</span>
-              <span className="sm:hidden">Wallet</span>
-              <ChevronDown className="ml-2 h-5 w-5" aria-hidden="true" />
-            </>
-          ) : (
-            <span>{isAnimating ? "Connecting..." : "Connect Wallet"}</span>
-          )}
+          <AnimatePresence mode="wait">
+            {isConnected ? (
+              <motion.span
+                key="connected"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <span className="hidden sm:inline">
+                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                </span>
+                <span className="sm:hidden">Wallet</span>
+                <ChevronDown
+                  className="ml-2 h-5 w-5 inline"
+                  aria-hidden="true"
+                />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="connect"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isAnimating ? "Connecting..." : "Connect Wallet"}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
       </div>
 
