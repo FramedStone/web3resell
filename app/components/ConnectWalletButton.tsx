@@ -11,9 +11,9 @@ const providerOptions = {
 };
 
 export default function ConnectWalletButton() {
-  const [walletAddress, setWalletAddress] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const connectWalletOnPageLoad = async () => {
@@ -27,8 +27,12 @@ export default function ConnectWalletButton() {
     };
     connectWalletOnPageLoad();
 
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        event.target instanceof Node &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -75,12 +79,6 @@ export default function ConnectWalletButton() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
-  function handleBecomeSeller() {
-    // Implement logic to become a seller
-    console.log("Becoming a seller...");
-    setIsDropdownOpen(false);
-  }
-
   function handleListProduct() {
     // Implement logic to list a product
     console.log("Listing a product...");
@@ -117,13 +115,6 @@ export default function ConnectWalletButton() {
       </Button>
       {isDropdownOpen && walletAddress && (
         <div className="absolute right-0 mt-2 w-48 bg-purple-800 rounded-md overflow-hidden shadow-xl z-10">
-          <button
-            onClick={handleBecomeSeller}
-            className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"
-          >
-            <Plus className="inline-block mr-2" size={16} />
-            Become a Seller
-          </button>
           <button
             onClick={handleListProduct}
             className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"
