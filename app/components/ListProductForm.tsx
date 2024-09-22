@@ -19,6 +19,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Image from "next/image";
 
 const CT_EXCHANGE_RATE = 0.1; // Assume 1 CT = 0.1 RM
 
@@ -235,7 +236,7 @@ export default function ListProductForm() {
                       />
                     </FormControl>
                     {imagePreview && (
-                      <img
+                      <Image
                         src={imagePreview}
                         alt="Product preview"
                         className="mt-2 max-w-xs rounded"
