@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Shield } from "lucide-react";
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   priceRM: number;
@@ -14,7 +14,7 @@ interface Product {
   isVerified: boolean;
 }
 
-const dummyProducts: Product[] = [
+export const dummyProducts: Product[] = [
   {
     id: 1,
     name: "Vintage Watch",

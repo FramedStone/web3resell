@@ -5,55 +5,16 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield } from "lucide-react";
-
-interface VerifiedProduct {
-  id: number;
-  name: string;
-  priceRM: number;
-  image: string;
-}
+import { Product, dummyProducts } from "./ProductListing";
 
 const CT_EXCHANGE_RATE = 0.1; // Assume 1 CT = 0.1 RM
 
-const dummyVerifiedProducts: VerifiedProduct[] = [
-  {
-    id: 1,
-    name: "Authentic Designer Watch",
-    priceRM: 1000,
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    name: "Certified Antique Vase",
-    priceRM: 500,
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    name: "Limited Edition Collectible",
-    priceRM: 750,
-    image: "/placeholder.svg",
-  },
-  { id: 4, name: "Rare Vintage Coin", priceRM: 300, image: "/placeholder.svg" },
-  {
-    id: 5,
-    name: "Authenticated Artwork",
-    priceRM: 1200,
-    image: "/placeholder.svg",
-  },
-  {
-    id: 6,
-    name: "Verified Sports Memorabilia",
-    priceRM: 800,
-    image: "/placeholder.svg",
-  },
-];
-
 export default function VerifiedProducts() {
-  const [products, setProducts] = useState<VerifiedProduct[]>(
-    dummyVerifiedProducts
+  const [products, setProducts] = useState<Product[]>(
+    dummyProducts.filter((product) => product.isVerified)
   );
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollWidth, setScrollWidth] = useState(0);
 
   const calculateCtPrice = (priceRM: number) => {
     return priceRM / CT_EXCHANGE_RATE;
@@ -63,24 +24,35 @@ export default function VerifiedProducts() {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
 
-    const totalWidth = scrollContainer.scrollWidth / 2;
+    const updateScrollWidth = () => {
+      setScrollWidth(scrollContainer.scrollWidth / 3);
+    };
+
+    updateScrollWidth();
+    window.addEventListener("resize", updateScrollWidth);
+
     let scrollAmount = 0;
     const scrollSpeed = 0.5; // Adjust this value to change scroll speed
 
     const scroll = () => {
       scrollAmount += scrollSpeed;
-      if (scrollAmount >= totalWidth) {
-        scrollAmount = 0;
-        scrollContainer.scrollLeft = 0;
-      } else {
+      if (scrollAmount >= scrollWidth) {
+        scrollAmount -= scrollWidth;
+      }
+      if (scrollContainer.scrollLeft !== scrollAmount) {
         scrollContainer.scrollLeft = scrollAmount;
       }
     };
 
     const intervalId = setInterval(scroll, 20);
 
-    return () => clearInterval(intervalId);
-  }, [products]);
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener("resize", updateScrollWidth);
+    };
+  }, [scrollWidth]);
+
+  const productList = [...products, ...products, ...products];
 
   return (
     <div className="bg-purple-900 py-16 overflow-hidden">
@@ -90,7 +62,7 @@ export default function VerifiedProducts() {
         </h2>
         <div ref={scrollRef} className="flex overflow-x-hidden">
           <div className="flex">
-            {[...products, ...products].map((product, index) => (
+            {productList.map((product, index) => (
               <motion.div
                 key={`${product.id}-${index}`}
                 className="flex-shrink-0 w-64 mx-4"

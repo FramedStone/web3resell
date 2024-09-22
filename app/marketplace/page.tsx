@@ -8,7 +8,12 @@ export default function Marketplace() {
       <Header />
       <main className="container mx-auto px-4 py-8 pt-24">
         <VerifiedProducts />
-        <ProductListing />
+        <div className="mt-16">
+          {" "}
+          {/* Added gap */}
+          <h2 className="text-3xl font-bold text-white mb-8">All Products</h2>
+          <ProductListing />
+        </div>
       </main>
     </div>
   );
