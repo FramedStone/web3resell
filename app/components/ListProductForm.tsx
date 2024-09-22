@@ -31,7 +31,8 @@ const formSchema = z.object({
     .min(10, { message: "Description must be at least 10 characters." }),
   priceRM: z
     .number()
-    .nonnegative({ message: "Price must be a non-negative number." }),
+    .nonnegative({ message: "Price must be a non-negative number." })
+    .multipleOf(0.01, { message: "Price must have at most 2 decimal places." }),
   quantity: z
     .number()
     .int()
@@ -134,7 +135,7 @@ export default function ListProductForm() {
                         step="0.01"
                         onChange={(e) => {
                           const value = e.target.value
-                            ? Math.max(0, parseFloat(e.target.value))
+                            ? parseFloat(parseFloat(e.target.value).toFixed(2))
                             : null;
                           field.onChange(value);
                           if (value !== null) {
@@ -143,6 +144,18 @@ export default function ListProductForm() {
                             );
                           } else {
                             setCtPrice(null);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const value = e.target.value
+                            ? parseFloat(parseFloat(e.target.value).toFixed(2))
+                            : null;
+                          if (value !== null) {
+                            e.target.value = value.toFixed(2);
+                            field.onChange(value);
+                            setCtPrice(
+                              Number((value / CT_EXCHANGE_RATE).toFixed(2))
+                            );
                           }
                         }}
                         className="bg-gray-800 text-white"
