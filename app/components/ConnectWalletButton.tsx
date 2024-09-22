@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Wallet, ChevronDown, Coins, Package, LogOut } from "lucide-react";
+import {
+  Wallet,
+  ChevronDown,
+  Coins,
+  Package,
+  LogOut,
+  AlertCircle,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConnectWalletButton() {
@@ -9,6 +16,7 @@ export default function ConnectWalletButton() {
   const [isConnected, setIsConnected] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [error, setError] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,19 +48,24 @@ export default function ConnectWalletButton() {
   const connectWallet = () => {
     if (!isConnected && !isAnimating) {
       setIsAnimating(true);
+      setError("");
       // Simulating wallet connection
       setTimeout(() => {
-        const newWalletAddress = "0x1234...5678"; // Replace with actual wallet connection logic
-        setWalletAddress(newWalletAddress);
-        setIsConnected(true);
+        const newWalletAddress = ""; // Simulating an empty wallet address for error case
+        if (newWalletAddress === "") {
+          setError("Failed to connect wallet. Please try again.");
+          setIsAnimating(false);
+        } else {
+          setWalletAddress(newWalletAddress);
+          setIsConnected(true);
+          localStorage.setItem("walletAddress", newWalletAddress);
+        }
         setIsAnimating(false);
-        localStorage.setItem("walletAddress", newWalletAddress);
       }, 1000);
     }
   };
 
   const disconnectWallet = () => {
-    // Simulating wallet disconnection
     setIsConnected(false);
     setWalletAddress("");
     setIsOpen(false);
@@ -138,6 +151,22 @@ export default function ConnectWalletButton() {
           )}
         </motion.button>
       </div>
+
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute left-0 right-0 mt-2 px-2 py-2 bg-red-100 border border-red-400 text-red-700 rounded-md shadow-lg"
+          >
+            <div className="flex items-center">
+              <AlertCircle className="h-5 w-5 mr-2" />
+              <span className="text-sm">{error}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isOpen && (
