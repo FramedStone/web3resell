@@ -40,10 +40,10 @@ export default function Header() {
       >
         <div className="container mx-auto px-4 py-2 sm:py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <Link
                 href="/"
-                className="text-xl sm:text-2xl font-bold text-white mr-2 sm:mr-4"
+                className="text-xl sm:text-2xl font-bold text-white"
               >
                 web3resell
                 {isMarketplacePage && (
@@ -52,19 +52,46 @@ export default function Header() {
                   </span>
                 )}
               </Link>
+            </div>
+
+            <nav className="hidden md:flex items-center space-x-4 lg:space-x-8">
+              <Link
+                href="/"
+                className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                href="/marketplace"
+                className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+              >
+                Marketplace
+              </Link>
+              <Link
+                href="#"
+                className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+              >
+                About
+              </Link>
+              <Link
+                href="#"
+                className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+              >
+                Contact
+              </Link>
+            </nav>
+
+            <div className="flex items-center space-x-2 sm:space-x-4">
               {isMarketplacePage && (
                 <div className="hidden sm:block">
                   <ListProductPopup />
                 </div>
               )}
-            </div>
-
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <div className="block sm:hidden">
+              <div className="hidden sm:block">
                 <ConnectWalletButton />
               </div>
               <motion.button
-                className="sm:hidden text-white focus:outline-none"
+                className="md:hidden text-white focus:outline-none"
                 onClick={toggleMobileMenu}
                 whileTap={{ scale: 0.95 }}
               >
@@ -84,37 +111,6 @@ export default function Header() {
                   </motion.div>
                 </AnimatePresence>
               </motion.button>
-
-              <nav className="hidden sm:flex items-center space-x-4 lg:space-x-8">
-                <Link
-                  href="/"
-                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/marketplace"
-                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
-                >
-                  Marketplace
-                </Link>
-                <Link
-                  href="#"
-                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
-                >
-                  About
-                </Link>
-                <Link
-                  href="#"
-                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
-                >
-                  Contact
-                </Link>
-              </nav>
-
-              <div className="hidden sm:block">
-                <ConnectWalletButton />
-              </div>
             </div>
           </div>
         </div>
@@ -169,6 +165,7 @@ export default function Header() {
                   Contact
                 </Link>
                 {isMarketplacePage && <ListProductPopup />}
+                <ConnectWalletButton />
               </nav>
             </div>
           </motion.div>
