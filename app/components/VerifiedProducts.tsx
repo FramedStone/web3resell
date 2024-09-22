@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Shield } from "lucide-react";
 
 interface VerifiedProduct {
   id: number;
@@ -13,7 +13,7 @@ interface VerifiedProduct {
   image: string;
 }
 
-const MANTA_EXCHANGE_RATE = 0.1; // Assume 1 MANTA = 0.1 RM
+const CT_EXCHANGE_RATE = 0.1; // Assume 1 CT = 0.1 RM
 
 const dummyVerifiedProducts: VerifiedProduct[] = [
   {
@@ -37,8 +37,8 @@ const dummyVerifiedProducts: VerifiedProduct[] = [
 ];
 
 export default function VerifiedProducts() {
-  const calculateMantaPrice = (priceRM: number) => {
-    return priceRM / MANTA_EXCHANGE_RATE;
+  const calculateCtPrice = (priceRM: number) => {
+    return priceRM / CT_EXCHANGE_RATE;
   };
 
   return (
@@ -55,7 +55,7 @@ export default function VerifiedProducts() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="bg-black text-white overflow-hidden">
+              <Card className="bg-black text-white overflow-hidden relative">
                 <CardContent className="p-0">
                   <div className="relative">
                     <Image
@@ -65,9 +65,12 @@ export default function VerifiedProducts() {
                       height={300}
                       className="w-full h-48 object-cover"
                     />
-                    <Badge className="absolute top-2 right-2 bg-purple-500">
-                      Verified
-                    </Badge>
+                    <div
+                      className="absolute top-2 right-2 bg-green-500 text-white p-1 rounded-full"
+                      title="Verified Product"
+                    >
+                      <Shield size={16} />
+                    </div>
                   </div>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mb-2">
@@ -78,7 +81,7 @@ export default function VerifiedProducts() {
                         RM {product.priceRM.toFixed(2)}
                       </p>
                       <p className="text-lg text-purple-300">
-                        {calculateMantaPrice(product.priceRM).toFixed(2)} MANTA
+                        {calculateCtPrice(product.priceRM).toFixed(2)} CT
                       </p>
                     </div>
                     <Button className="w-full bg-purple-500 hover:bg-purple-600">

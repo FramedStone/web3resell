@@ -19,92 +19,59 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const MANTA_EXCHANGE_RATE = 0.1; // Assume 1 MANTA = 0.1 RM
+const CT_EXCHANGE_RATE = 0.1; // Assume 1 CT = 0.1 RM
 
-const formSchema = z
-  .object({
-    name: z
-      .string()
-      .min(2, { message: "Product name must be at least 2 characters." }),
-    description: z
-      .string()
-      .min(10, { message: "Description must be at least 10 characters." }),
-    priceType: z.enum(["RM", "MANTA", "BOTH"]),
-    priceRM: z
-      .number()
-      .nonnegative({ message: "Price must be a non-negative number." })
-      .optional(),
-    priceManta: z
-      .number()
-      .nonnegative({ message: "Price must be a non-negative number." })
-      .optional(),
-    quantity: z
-      .number()
-      .int()
-      .positive({ message: "Quantity must be a positive integer." }),
-    shippingAddress: z
-      .string()
-      .min(10, { message: "Please enter a valid shipping address." }),
-    image: z
-      .instanceof(File)
-      .refine((file) => file.size <= 5000000, `Max image size is 5MB.`),
-    eCertificate: z.instanceof(File).optional(),
-    eWarranty: z.instanceof(File).optional(),
-    eInsurance: z.instanceof(File).optional(),
-    isVerified: z.boolean().default(false),
-  })
-  .refine(
-    (data) => {
-      if (data.priceType === "RM" || data.priceType === "BOTH") {
-        return data.priceRM !== undefined && data.priceRM > 0;
-      }
-      if (data.priceType === "MANTA" || data.priceType === "BOTH") {
-        return data.priceManta !== undefined && data.priceManta > 0;
-      }
-      return true;
-    },
-    {
-      message: "Please enter a valid price for the selected currency type(s)",
-      path: ["priceRM", "priceManta"],
-    }
-  );
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Product name must be at least 2 characters." }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters." }),
+  priceRM: z
+    .number()
+    .nonnegative({ message: "Price must be a non-negative number." }),
+  quantity: z
+    .number()
+    .int()
+    .positive({ message: "Quantity must be a positive integer." }),
+  shippingAddress: z
+    .string()
+    .min(10, { message: "Please enter a valid shipping address." }),
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5000000, `Max image size is 5MB.`),
+  eCertificate: z.instanceof(File).optional(),
+  eWarranty: z.instanceof(File).optional(),
+  eInsurance: z.instanceof(File).optional(),
+  isVerified: z.boolean().default(false),
+});
 
 export default function ListProductForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [ctPrice, setCtPrice] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      priceType: "RM",
-      priceRM: 0,
-      priceManta: 0,
       quantity: 1,
       shippingAddress: "",
       isVerified: false,
     },
   });
 
-  const watchPriceType = form.watch("priceType");
   const watchPriceRM = form.watch("priceRM");
-  const watchPriceManta = form.watch("priceManta");
 
   useEffect(() => {
-    if (watchPriceType === "RM" && watchPriceRM) {
-      form.setValue(
-        "priceManta",
-        Number((watchPriceRM / MANTA_EXCHANGE_RATE).toFixed(2))
-      );
-    } else if (watchPriceType === "MANTA" && watchPriceManta) {
-      form.setValue(
-        "priceRM",
-        Number((watchPriceManta * MANTA_EXCHANGE_RATE).toFixed(2))
-      );
+    if (watchPriceRM) {
+      setCtPrice(Number((watchPriceRM / CT_EXCHANGE_RATE).toFixed(2)));
+    } else {
+      setCtPrice(null);
     }
-  }, [watchPriceType, watchPriceRM, watchPriceManta, form]);
+  }, [watchPriceRM]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -113,7 +80,7 @@ export default function ListProductForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto bg-gray-900 text-white">
       <CardContent>
         <ScrollArea className="h-[70vh] pr-4">
           <Form {...form}>
@@ -125,7 +92,11 @@ export default function ListProductForm() {
                   <FormItem>
                     <FormLabel>Product Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter product name" {...field} />
+                      <Input
+                        placeholder="Enter product name"
+                        {...field}
+                        className="bg-gray-800 text-white"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,6 +112,7 @@ export default function ListProductForm() {
                       <Textarea
                         placeholder="Enter product description"
                         {...field}
+                        className="bg-gray-800 text-white"
                       />
                     </FormControl>
                     <FormMessage />
@@ -149,84 +121,42 @@ export default function ListProductForm() {
               />
               <FormField
                 control={form.control}
-                name="priceType"
+                name="priceRM"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price Type</FormLabel>
+                    <FormLabel>Price (RM)</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="RM" />
-                          </FormControl>
-                          <FormLabel className="font-normal">RM</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="MANTA" />
-                          </FormControl>
-                          <FormLabel className="font-normal">MANTA</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="BOTH" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Both</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
+                      <Input
+                        type="number"
+                        placeholder="Enter price in RM"
+                        {...field}
+                        min="0"
+                        step="0.01"
+                        onChange={(e) => {
+                          const value = e.target.value
+                            ? Math.max(0, parseFloat(e.target.value))
+                            : null;
+                          field.onChange(value);
+                          if (value !== null) {
+                            setCtPrice(
+                              Number((value / CT_EXCHANGE_RATE).toFixed(2))
+                            );
+                          } else {
+                            setCtPrice(null);
+                          }
+                        }}
+                        className="bg-gray-800 text-white"
+                      />
                     </FormControl>
+                    <FormDescription className="text-gray-400">
+                      {ctPrice !== null
+                        ? `Equivalent CT price: ${ctPrice} CT`
+                        : "Enter a price to see CT equivalent"}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {(watchPriceType === "RM" || watchPriceType === "BOTH") && (
-                <FormField
-                  control={form.control}
-                  name="priceRM"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price (RM)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter price in RM"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              {(watchPriceType === "MANTA" || watchPriceType === "BOTH") && (
-                <FormField
-                  control={form.control}
-                  name="priceManta"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price (MANTA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter price in MANTA"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
               <FormField
                 control={form.control}
                 name="quantity"
@@ -238,9 +168,12 @@ export default function ListProductForm() {
                         type="number"
                         placeholder="Enter quantity"
                         {...field}
+                        min="1"
+                        step="1"
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value))
                         }
+                        className="bg-gray-800 text-white"
                       />
                     </FormControl>
                     <FormMessage />
@@ -257,9 +190,10 @@ export default function ListProductForm() {
                       <Textarea
                         placeholder="Enter full shipping address (e.g., Street, City, State/Province, Postal Code, Country)"
                         {...field}
+                        className="bg-gray-800 text-white"
                       />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="text-gray-400">
                       Please provide the full address from where the product
                       will be shipped.
                     </FormDescription>
@@ -284,6 +218,7 @@ export default function ListProductForm() {
                             setImagePreview(URL.createObjectURL(file));
                           }
                         }}
+                        className="bg-gray-800 text-white"
                       />
                     </FormControl>
                     {imagePreview && (
@@ -301,7 +236,7 @@ export default function ListProductForm() {
                 control={form.control}
                 name="isVerified"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
@@ -310,7 +245,7 @@ export default function ListProductForm() {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Verified Product</FormLabel>
-                      <FormDescription>
+                      <FormDescription className="text-gray-400">
                         Check this if you want to list as a verified product
                         (requires additional documents).
                       </FormDescription>
@@ -333,6 +268,7 @@ export default function ListProductForm() {
                             onChange={(e) =>
                               field.onChange(e.target.files?.[0])
                             }
+                            className="bg-gray-800 text-white"
                           />
                         </FormControl>
                         <FormMessage />
@@ -352,6 +288,7 @@ export default function ListProductForm() {
                             onChange={(e) =>
                               field.onChange(e.target.files?.[0])
                             }
+                            className="bg-gray-800 text-white"
                           />
                         </FormControl>
                         <FormMessage />
@@ -371,6 +308,7 @@ export default function ListProductForm() {
                             onChange={(e) =>
                               field.onChange(e.target.files?.[0])
                             }
+                            className="bg-gray-800 text-white"
                           />
                         </FormControl>
                         <FormMessage />
@@ -379,7 +317,12 @@ export default function ListProductForm() {
                   />
                 </>
               )}
-              <Button type="submit">List Product</Button>
+              <Button
+                type="submit"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                List Product
+              </Button>
             </form>
           </Form>
         </ScrollArea>
