@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
   const { scrollYProgress } = useScroll();
@@ -19,7 +20,7 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        The Future of Decentralized E-Commerce is Here
+        The Future of Decentralized Commerce is Here
       </motion.h1>
       <motion.p
         className="text-lg lg:text-xl mb-8 max-w-2xl"
@@ -27,17 +28,19 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Buy and sell products securely on web3resell, powered by layer 2
-        blockchain Manta Network
+        Buy and sell products securely on web3resell, powered by Manta Network's
+        layer 2 blockchain
       </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <Button className="bg-purple-600 hover:bg-purple-700">
-          Explore Marketplace <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <Link href="/marketplace" passHref>
+          <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+            Explore Marketplace <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       </motion.div>
       <motion.div
         className="absolute bottom-8"
