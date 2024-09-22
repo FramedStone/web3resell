@@ -1,130 +1,105 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Wallet, ChevronDown, DollarSign } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
-
-const providerOptions = {
-  // modify with custom SDK (coinbase, bitget...) if needed
-};
+import { useState } from "react";
+import { Wallet, ChevronDown, Coins, Package, LogOut } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConnectWalletButton() {
-  const [walletAddress, setWalletAddress] = useState<string>("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
-  useEffect(() => {
-    const connectWalletOnPageLoad = async () => {
-      if (localStorage?.getItem("isWalletConnected") === "true") {
-        try {
-          await handleConnect();
-        } catch (ex) {
-          console.log(ex);
-        }
-      }
-    };
-    connectWalletOnPageLoad();
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        event.target instanceof Node &&
-        !dropdownRef.current.contains(event.target)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
+  const connectWallet = () => {
+    // Simulating wallet connection
+    setIsConnected(true);
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  async function handleConnect() {
-    try {
-      const web3modal = new Web3Modal({
-        cacheProvider: true,
-        providerOptions,
-      });
-
-      const web3modal_instance = await web3modal.connect();
-      const web3modal_provider = new ethers.BrowserProvider(web3modal_instance);
-      const web3modal_signer = await web3modal_provider.getSigner();
-
-      const wallet_address = await web3modal_signer.getAddress();
-      setWalletAddress(wallet_address);
-      localStorage.setItem("isWalletConnected", "true");
-    } catch (error) {
-      console.error(error);
-      setWalletAddress("");
-      localStorage.removeItem("isWalletConnected");
-    }
-  }
-
-  function handleDisconnect() {
-    setWalletAddress("");
-    localStorage.removeItem("isWalletConnected");
-    const web3modal = new Web3Modal({
-      cacheProvider: true,
-      providerOptions,
-    });
-    web3modal.clearCachedProvider();
-    setIsDropdownOpen(false);
-  }
-
-  function toggleDropdown() {
-    setIsDropdownOpen(!isDropdownOpen);
-  }
-
-  function handleTopUpTokens() {
-    // Implement logic to top up tokens
-    console.log("Topping up tokens...");
-    setIsDropdownOpen(false);
-  }
+  const disconnectWallet = () => {
+    // Simulating wallet disconnection
+    setIsConnected(false);
+    setIsOpen(false);
+  };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <Button
-        className={`w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out ${
-          walletAddress ? "text-xs sm:text-sm" : "text-sm sm:text-base"
-        }`}
-        onClick={walletAddress ? toggleDropdown : handleConnect}
-      >
-        <Wallet className="mr-2 h-4 w-4" />
-        <span className="truncate max-w-[120px] sm:max-w-[200px]">
-          {walletAddress
-            ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-            : "Connect Wallet"}
-        </span>
-        {walletAddress && (
-          <ChevronDown
-            className={`ml-2 h-4 w-4 transition-transform duration-200 ${
-              isDropdownOpen ? "rotate-180" : ""
-            }`}
-          />
+    <div className="relative inline-block text-left">
+      <div>
+        <button
+          type="button"
+          className="inline-flex justify-center items-center w-full rounded-md border border-transparent px-4 py-2 bg-purple-600 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
+          id="connect-wallet-button"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          onClick={isConnected ? toggleDropdown : connectWallet}
+        >
+          {isConnected ? (
+            <>
+              <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
+              <span className="hidden sm:inline">0x1234...5678</span>
+              <span className="sm:hidden">Wallet</span>
+              <ChevronDown className="ml-2 h-5 w-5" aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              <Wallet className="mr-2 h-5 w-5" aria-hidden="true" />
+              <span>Connect Wallet</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.1 }}
+            className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="connect-wallet-button"
+          >
+            <div className="py-1" role="none">
+              <a
+                href="#"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                role="menuitem"
+              >
+                <Coins
+                  className="mr-3 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                CT Tokens
+              </a>
+              <a
+                href="#"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                role="menuitem"
+              >
+                <Package
+                  className="mr-3 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                Products (Seller)
+              </a>
+            </div>
+            <div className="py-1" role="none">
+              <button
+                className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                role="menuitem"
+                onClick={disconnectWallet}
+              >
+                <LogOut
+                  className="mr-3 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                Disconnect Wallet
+              </button>
+            </div>
+          </motion.div>
         )}
-      </Button>
-      {isDropdownOpen && walletAddress && (
-        <div className="absolute right-0 mt-2 w-48 bg-purple-800 rounded-md overflow-hidden shadow-xl z-10">
-          <button
-            onClick={handleTopUpTokens}
-            className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"
-          >
-            <DollarSign className="inline-block mr-2" size={16} />
-            Top Up Tokens
-          </button>
-          <button
-            onClick={handleDisconnect}
-            className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-700 transition-colors duration-200"
-          >
-            <Wallet className="inline-block mr-2" size={16} />
-            Disconnect Wallet
-          </button>
-        </div>
-      )}
+      </AnimatePresence>
     </div>
   );
 }

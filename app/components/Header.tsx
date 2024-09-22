@@ -38,69 +38,83 @@ export default function Header() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2 sm:py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-white mr-4">
-                web3resell
-                {isMarketplacePage && (
-                  <span className="ml-2 text-purple-300">Marketplace</span>
-                )}
-              </Link>
-              {isMarketplacePage && <ListProductPopup />}
-            </div>
-
-            <motion.button
-              className="lg:hidden text-white focus:outline-none"
-              onClick={toggleMobileMenu}
-              whileTap={{ scale: 0.95 }}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={mobileMenuOpen ? "open" : "closed"}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-6 w-6" />
-                  ) : (
-                    <Menu className="h-6 w-6" />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </motion.button>
-
-            <nav className="hidden lg:flex items-center space-x-8">
               <Link
                 href="/"
-                className="text-white hover:text-purple-300 transition-colors"
+                className="text-xl sm:text-2xl font-bold text-white mr-2 sm:mr-4"
               >
-                Home
+                web3resell
+                {isMarketplacePage && (
+                  <span className="ml-1 sm:ml-2 text-sm sm:text-base text-purple-300">
+                    Marketplace
+                  </span>
+                )}
               </Link>
-              <Link
-                href="/marketplace"
-                className="text-white hover:text-purple-300 transition-colors"
-              >
-                Marketplace
-              </Link>
-              <Link
-                href="#"
-                className="text-white hover:text-purple-300 transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                href="#"
-                className="text-white hover:text-purple-300 transition-colors"
-              >
-                Contact
-              </Link>
-            </nav>
+              {isMarketplacePage && (
+                <div className="hidden sm:block">
+                  <ListProductPopup />
+                </div>
+              )}
+            </div>
 
-            <div className="hidden lg:block">
-              <ConnectWalletButton />
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="block sm:hidden">
+                <ConnectWalletButton />
+              </div>
+              <motion.button
+                className="sm:hidden text-white focus:outline-none"
+                onClick={toggleMobileMenu}
+                whileTap={{ scale: 0.95 }}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={mobileMenuOpen ? "open" : "closed"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {mobileMenuOpen ? (
+                      <X className="h-6 w-6" />
+                    ) : (
+                      <Menu className="h-6 w-6" />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.button>
+
+              <nav className="hidden sm:flex items-center space-x-4 lg:space-x-8">
+                <Link
+                  href="/"
+                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/marketplace"
+                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+                >
+                  Marketplace
+                </Link>
+                <Link
+                  href="#"
+                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+                >
+                  About
+                </Link>
+                <Link
+                  href="#"
+                  className="text-sm lg:text-base text-white hover:text-purple-300 transition-colors"
+                >
+                  Contact
+                </Link>
+              </nav>
+
+              <div className="hidden sm:block">
+                <ConnectWalletButton />
+              </div>
             </div>
           </div>
         </div>
@@ -116,7 +130,10 @@ export default function Header() {
           >
             <div className="container mx-auto px-4 py-4">
               <div className="flex justify-between items-center mb-8">
-                <Link href="/" className="text-2xl font-bold text-white">
+                <Link
+                  href="/"
+                  className="text-xl sm:text-2xl font-bold text-white"
+                >
                   web3resell
                 </Link>
                 <button
@@ -129,30 +146,29 @@ export default function Header() {
               <nav className="flex flex-col space-y-6 items-center">
                 <Link
                   href="/"
-                  className="text-xl text-white hover:text-purple-300 transition-colors"
+                  className="text-lg sm:text-xl text-white hover:text-purple-300 transition-colors"
                 >
                   Home
                 </Link>
                 <Link
                   href="/marketplace"
-                  className="text-xl text-white hover:text-purple-300 transition-colors"
+                  className="text-lg sm:text-xl text-white hover:text-purple-300 transition-colors"
                 >
                   Marketplace
                 </Link>
                 <Link
                   href="#"
-                  className="text-xl text-white hover:text-purple-300 transition-colors"
+                  className="text-lg sm:text-xl text-white hover:text-purple-300 transition-colors"
                 >
                   About
                 </Link>
                 <Link
                   href="#"
-                  className="text-xl text-white hover:text-purple-300 transition-colors"
+                  className="text-lg sm:text-xl text-white hover:text-purple-300 transition-colors"
                 >
                   Contact
                 </Link>
                 {isMarketplacePage && <ListProductPopup />}
-                <ConnectWalletButton />
               </nav>
             </div>
           </motion.div>

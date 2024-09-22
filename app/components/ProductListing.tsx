@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Shield } from "lucide-react";
@@ -68,9 +67,11 @@ export const dummyProducts: Product[] = [
 // Assume 1 CT = 0.1 RM for this example
 const CT_EXCHANGE_RATE = 0.1;
 
-export default function ProductListing() {
-  const [products] = useState<Product[]>(dummyProducts);
+interface ProductListingProps {
+  products: Product[];
+}
 
+export default function ProductListing({ products }: ProductListingProps) {
   const calculateCtPrice = (priceRM: number) => {
     return priceRM / CT_EXCHANGE_RATE;
   };
